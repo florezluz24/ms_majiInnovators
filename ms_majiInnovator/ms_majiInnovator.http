@@ -1,0 +1,6 @@
+@ms_majiInnovator_HostAddress = http://localhost:5272
+
+GET {{ms_majiInnovator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
