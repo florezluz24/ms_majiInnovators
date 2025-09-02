@@ -92,6 +92,70 @@ namespace ms_majiInnovator.Controladores
             return CreatedAtAction(nameof(ObtenerPorId), new { id = usuarioCreado.Id }, usuarioCreado);
         }
 
+        [HttpPost("validar-acceso")]
+        public async Task<ActionResult<Usuario>> ValidarAcceso(ValidarAccesoDTO validarAccesoDTO)
+        {
+            // Validar que los datos no estén vacíos
+            if (string.IsNullOrWhiteSpace(validarAccesoDTO.Cedula))
+            {
+                return BadRequest("Cédula es obligatoria");
+            }
+
+            if (string.IsNullOrWhiteSpace(validarAccesoDTO.Password))
+            {
+                return BadRequest("Contraseña es obligatoria");
+            }
+
+            // Limpiar espacios en blanco
+            validarAccesoDTO.Cedula = validarAccesoDTO.Cedula.Trim();
+            validarAccesoDTO.Password = validarAccesoDTO.Password.Trim();
+
+            // Validar que la cédula sea numérica
+            if (!int.TryParse(validarAccesoDTO.Cedula, out int cedulaNumerica))
+            {
+                return BadRequest("Cédula debe ser numérica");
+            }
+
+            try
+            {
+                // Buscar usuario por cédula
+                List<Usuario> usuarios = await _repositorioUsuario.ObtenerConFiltroAsync(usuario => 
+                    usuario.Cedula == validarAccesoDTO.Cedula
+                );
+
+                Usuario? usuario = usuarios.FirstOrDefault();
+
+                // Si no existe el usuario, devolver 401
+                if (usuario == null)
+                {
+                    return Unauthorized("Credenciales inválidas");
+                }
+
+                // Validar contraseña
+                if (usuario.Password != validarAccesoDTO.Password)
+                {
+                    return Unauthorized("Credenciales inválidas");
+                }
+
+                // Si las credenciales son válidas, devolver el usuario (sin la contraseña por seguridad)
+                var usuarioRespuesta = new
+                {
+                    usuario.Id,
+                    usuario.Nombre,
+                    usuario.Cedula,
+                    usuario.Telefono,
+                    usuario.Rol
+                };
+
+                return Ok(usuarioRespuesta);
+            }
+            catch (Exception ex)
+            {
+                // Log del error para debugging
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Modificar(int id, Usuario usuario)
         {
