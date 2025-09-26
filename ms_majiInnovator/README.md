@@ -1,165 +1,151 @@
-# Maji Innovator - Backend
+# 📊 Sistema de Encuestas - Backend
 
-API REST desarrollada en .NET 8 para el sistema de encuestas Maji Innovator.
+Este es el backend (servidor) de un sistema de encuestas desarrollado para un proyecto de clase.
 
-## 🚀 Tecnologías
+## ¿Qué hace este proyecto?
 
-- **.NET 8.0** - Framework principal
-- **Entity Framework Core 8.0.0** - ORM para acceso a datos
-- **SQL Server** - Base de datos
-- **Swagger/OpenAPI 6.4.0** - Documentación de API
-- **CORS** - Configurado para frontend Angular
+Este backend permite:
+- Registrar usuarios en el sistema
+- Hacer login con usuario y contraseña
+- Obtener preguntas de encuestas
+- Guardar respuestas de los usuarios
 
-## 📋 Prerrequisitos
+## 🛠️ Tecnologías que usamos
 
-- .NET 8.0 SDK
-- SQL Server (LocalDB, Express o Developer Edition)
-- Visual Studio 2022 o Visual Studio Code
+- **C#** - Lenguaje de programación
+- **.NET 8** - Framework de Microsoft
+- **Entity Framework** - Para trabajar con la base de datos
+- **SQL Server** - Base de datos donde guardamos la información
 
-## 🛠️ Instalación
+## 📋 Lo que necesitas para ejecutar el proyecto
 
-1. Clona el repositorio:
-```bash
-git clone <url-del-repositorio>
-cd ms_majiInnovator
+1. **Visual Studio 2022** (gratis) o **Visual Studio Code**
+2. **.NET 8 SDK** (descargar desde Microsoft)
+3. **Acceso a SQL Server en Azure** (la base de datos está en la nube)
+
+## 🚀 Cómo ejecutar el proyecto
+
+### Paso 1: Configurar Azure (IMPORTANTE)
+1. Ve al portal de Azure (portal.azure.com)
+2. Busca tu servidor SQL Server
+3. Ve a "Configuración" → "Firewall y redes virtuales"
+4. Haz clic en "Agregar IP del cliente" o agrega tu IP manualmente
+5. Copia la cadena de conexión del servidor
+6. Abre el archivo `appsettings.json` en el proyecto
+7. Reemplaza la cadena de conexión con la de Azure
+
+### Paso 2: Abrir el proyecto
+1. Abre Visual Studio
+2. Selecciona "Abrir proyecto o solución"
+3. Busca la carpeta `ms_majiInnovator` y abre el archivo `.csproj`
+
+### Paso 3: Ejecutar
+1. Presiona **F5** o haz clic en el botón verde "Start"
+2. Se abrirá una ventana del navegador con la dirección `https://localhost:7166`
+
+## 📁 Estructura del proyecto (carpetas principales)
+
+```
+ms_majiInnovator/
+├── Controladores/     # Aquí están las rutas de la API
+├── Modelos/          # Las tablas de la base de datos
+├── DTOs/             # Los datos que enviamos y recibimos
+├── Repositorios/     # Código para acceder a la base de datos
+└── Program.cs        # Archivo principal donde empieza todo
 ```
 
-2. Restaura las dependencias:
-```bash
-dotnet restore
-```
+## 🔗 Rutas principales de la API
 
-3. Configura la cadena de conexión en `appsettings.json`:
+### Usuarios
+- `GET /api/Usuario` - Ver todos los usuarios
+- `POST /api/Usuario` - Crear un usuario nuevo
+- `POST /api/Usuario/validar-acceso` - Hacer login
+
+### Encuestas
+- `GET /api/Encuesta` - Obtener las preguntas de la encuesta
+
+### Respuestas
+- `GET /api/RespuestaEncuesta` - Ver todas las respuestas
+- `POST /api/RespuestaEncuesta` - Guardar una respuesta
+
+## 🗄️ Base de datos
+
+La base de datos está alojada en **Azure SQL Server** (en la nube).
+
+### ⚠️ Configuración importante de Azure:
+
+**Antes de ejecutar el proyecto, debes:**
+1. **Registrar tu IP** en las reglas de firewall de Azure
+2. **Obtener la cadena de conexión** del servidor SQL en Azure
+3. **Actualizar** el archivo `appsettings.json` con la cadena correcta
+
+### Tablas principales:
+- **Usuarios** - Información de las personas registradas
+- **RespuestasEncuesta** - Las respuestas que dan los usuarios
+
+### 🔧 Cómo configurar la conexión a Azure:
+
+1. Ve al portal de Azure (portal.azure.com)
+2. Busca tu servidor SQL Server
+3. Ve a "Configuración" → "Firewall y redes virtuales"
+4. Agrega tu IP actual a las reglas de firewall
+5. Copia la cadena de conexión
+6. Pégala en el archivo `appsettings.json`
+
+### 📝 Ejemplo de cadena de conexión de Azure:
+
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=MajiInnovatorDB;Trusted_Connection=true;MultipleActiveResultSets=true"
+    "DefaultConnection": "Server=tcp:tu-servidor.database.windows.net,1433;Initial Catalog=MajiInnovatorDB;Persist Security Info=False;User ID=tu-usuario;Password=tu-password;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
 }
 ```
 
-## 🏃‍♂️ Ejecución
+**⚠️ Nota**: Reemplaza `tu-servidor`, `tu-usuario` y `tu-password` con los valores reales de tu servidor Azure.
 
-### Desarrollo
+## 🧪 Cómo probar la API
+
+1. Ejecuta el proyecto (F5)
+2. Ve a `https://localhost:7166/swagger`
+3. Ahí puedes probar todas las funciones de la API
+
+## 📝 Comandos útiles (si usas terminal)
+
 ```bash
+# Restaurar paquetes
+dotnet restore
+
+# Ejecutar el proyecto
 dotnet run
-```
-La API estará disponible en `https://localhost:5000` y `http://localhost:5000`
 
-### Con Visual Studio
-Presiona F5 o usa el botón "Start Debugging"
-
-## 📊 Base de Datos
-
-### Migraciones
-El proyecto usa Entity Framework Code First. La base de datos se crea automáticamente al ejecutar la aplicación.
-
-Para crear una nueva migración:
-```bash
-dotnet ef migrations add NombreMigracion
+# Compilar el proyecto
+dotnet build
 ```
 
-Para aplicar migraciones:
-```bash
-dotnet ef database update
-```
+## 🎯 Objetivo del proyecto
 
-## 📁 Estructura del Proyecto
+Este backend forma parte de un sistema completo que incluye:
+- **Frontend** (Angular) - La parte que ven los usuarios
+- **Backend** (este proyecto) - La parte que maneja los datos
 
-```
-ms_majiInnovator/
-├── Controladores/           # Controladores de la API
-│   ├── EncuestaController.cs
-│   ├── RespuestaEncuestaController.cs
-│   └── UsuarioController.cs
-├── DTOs/                   # Data Transfer Objects
-│   ├── RespuestaEncuestaDTO.cs
-│   ├── UsuarioDTO.cs
-│   └── ValidarAccesoDTO.cs
-├── Modelos/                # Entidades del dominio
-│   ├── CatalogoTelefono.cs
-│   ├── RespuestaEncuesta.cs
-│   └── Usuario.cs
-├── Persistencia/           # Configuración de Entity Framework
-│   ├── ApplicationDbContextFactory.cs
-│   ├── ConfiguracionConexion.cs
-│   ├── ConfiguracionServicios.cs
-│   └── ModeladoTablas.cs
-├── Repositorios/           # Patrón Repository
-│   ├── RepositorioCatalogoTelefono.cs
-│   ├── RepositorioRespuestaEncuesta.cs
-│   └── RepositorioUsuario.cs
-├── Encuestas/              # Lógica de negocio
-│   └── RespuestasGeneralesEncuesta.cs
-├── Migrations/             # Migraciones de Entity Framework
-└── Program.cs              # Punto de entrada de la aplicación
-```
+## 👥 Para estudiantes
 
-## 🔧 Configuración
+Este es un proyecto de clase que demuestra:
+- Cómo crear una API REST
+- Cómo conectar con una base de datos
+- Cómo estructurar un proyecto de .NET
+- Patrones básicos de programación
 
-### CORS
-La API está configurada para aceptar peticiones desde:
-- `http://localhost:4200` (Frontend Angular en desarrollo)
-- `https://localhost:4200` (Frontend Angular con HTTPS)
+## ❓ ¿Problemas?
 
-### Swagger
-En modo desarrollo, la documentación de la API está disponible en:
-- `https://localhost:5000/swagger`
-- `http://localhost:5000/swagger`
+Si algo no funciona:
+1. Verifica que tengas .NET 8 instalado
+2. Asegúrate de que Visual Studio esté actualizado
+3. **Revisa que tu IP esté registrada en Azure** (problema más común)
+4. Verifica que la cadena de conexión en `appsettings.json` sea correcta
+5. Pregunta al profesor o compañeros
 
-## 📡 Endpoints Principales
-
-### Usuarios
-- `GET /api/Usuario` - Obtener todos los usuarios
-- `POST /api/Usuario` - Crear nuevo usuario
-- `POST /api/Usuario/validar-acceso` - Validar credenciales
-
-### Encuestas
-- `GET /api/Encuesta` - Obtener encuestas
-- `POST /api/Encuesta` - Crear nueva encuesta
-
-### Respuestas
-- `GET /api/RespuestaEncuesta` - Obtener respuestas
-- `POST /api/RespuestaEncuesta` - Guardar respuesta
-
-## 🏗️ Arquitectura
-
-El proyecto sigue los siguientes patrones:
-
-- **Repository Pattern** - Para el acceso a datos
-- **DTO Pattern** - Para transferencia de datos
-- **Dependency Injection** - Para la inyección de dependencias
-- **Code First** - Para el modelado de la base de datos
-
-## 🧪 Testing
-
-Para ejecutar las pruebas:
-```bash
-dotnet test
-```
-
-## 📝 Scripts Útiles
-
-- `dotnet run` - Ejecutar la aplicación
-- `dotnet build` - Compilar el proyecto
-- `dotnet test` - Ejecutar pruebas
-- `dotnet ef migrations add <nombre>` - Crear migración
-- `dotnet ef database update` - Aplicar migraciones
-
-## 🔒 Seguridad
-
-- CORS configurado para orígenes específicos
-- Validación de entrada en controladores
-- Uso de DTOs para transferencia de datos
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+### 🔥 Problema más común: "No se puede conectar al servidor"
+- **Solución**: Tu IP no está registrada en el firewall de Azure
+- **Pasos**: Ve a Azure → SQL Server → Firewall → Agregar tu IP
