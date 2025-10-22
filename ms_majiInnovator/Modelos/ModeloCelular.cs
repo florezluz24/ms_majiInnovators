@@ -61,6 +61,11 @@ namespace ms_majiInnovator.Modelos
         public virtual ICollection<CaracteristicaCelular> Caracteristicas { get; set; } = new List<CaracteristicaCelular>();
 
         /// <summary>
+        /// Colección de imágenes asociadas a este modelo
+        /// </summary>
+        public virtual ICollection<ImagenCelular> Imagenes { get; set; } = new List<ImagenCelular>();
+
+        /// <summary>
         /// Constructor con parámetros para crear un nuevo modelo
         /// </summary>
         /// <param name="nombre">Nombre del modelo</param>

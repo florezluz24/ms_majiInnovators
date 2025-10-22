@@ -10,6 +10,7 @@ namespace ms_majiInnovator.Persistencia
         public DbSet<MarcaCelular> MarcasCelular { get; set; }
         public DbSet<ModeloCelular> ModelosCelular { get; set; }
         public DbSet<CaracteristicaCelular> CaracteristicasCelular { get; set; }
+        public DbSet<ImagenCelular> ImagenesCelular { get; set; }
 
 
         public ModeladoTablas(DbContextOptions<ModeladoTablas> opciones) : base(opciones)
@@ -151,6 +152,24 @@ namespace ms_majiInnovator.Persistencia
 
                 entity.HasIndex(e => new { e.Nombre, e.ModeloId })
                       .IsUnique();
+            });
+
+            modelBuilder.Entity<ImagenCelular>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .ValueGeneratedOnAdd()
+                      .UseIdentityColumn();
+
+                entity.Property(e => e.RutaImagen)
+                      .IsRequired()
+                      .HasMaxLength(500);
+
+                entity.HasOne(e => e.Modelo)
+                      .WithMany(m => m.Imagenes)
+                      .HasForeignKey(e => e.ModeloId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
         }
