@@ -52,25 +52,9 @@ namespace ms_majiInnovator.Repositorios
         {
             List<MarcaCelular> marcasConModelos = await _contexto.MarcasCelular
                 .Include(m => m.Modelos)
+                .ThenInclude(m => m.Caracteristicas)
                 .ToListAsync();
             return marcasConModelos;
-        }
-
-        public async Task<MarcaCelular?> ObtenerPorIdConModelosAsync(int id)
-        {
-            MarcaCelular? marcaConModelos = await _contexto.MarcasCelular
-                .Include(m => m.Modelos)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            return marcaConModelos;
-        }
-
-        public async Task<List<MarcaCelular>> ObtenerActivasConModelosAsync()
-        {
-            List<MarcaCelular> marcasActivasConModelos = await _contexto.MarcasCelular
-                .Where(m => m.Activa)
-                .Include(m => m.Modelos)
-                .ToListAsync();
-            return marcasActivasConModelos;
-        }
+        }       
     }
 }

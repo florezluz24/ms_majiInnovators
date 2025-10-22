@@ -13,6 +13,7 @@ namespace ms_majiInnovator.Persistencia
             
             servicios.AddScoped<RepositorioUsuario>();
             servicios.AddScoped<RepositorioRespuestaEncuesta>();            
+            servicios.AddScoped<RepositorioMarcaCelular>();            
         }
     }
 }
