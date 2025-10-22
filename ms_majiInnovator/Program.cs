@@ -4,7 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AgregarServiciosPersistencia();
+// Obtener la cadena de conexión desde appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+builder.Services.AgregarServiciosPersistencia(connectionString);
 
 // Configurar CORS para permitir peticiones desde el frontend
 builder.Services.AddCors(options =>

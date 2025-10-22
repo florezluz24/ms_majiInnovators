@@ -6,8 +6,10 @@ namespace ms_majiInnovator.Persistencia
     public class ModeladoTablas : DbContext
     {
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<RespuestaEncuesta> RespuestasEncuesta { get; set; }
-        public DbSet<CatalogoTelefono> CatalogoTelefono { get; set; }
+        public DbSet<RespuestaEncuesta> RespuestasEncuesta { get; set; }        
+        public DbSet<MarcaCelular> MarcasCelular { get; set; }
+        public DbSet<ModeloCelular> ModelosCelular { get; set; }
+        public DbSet<CaracteristicaCelular> CaracteristicasCelular { get; set; }
 
 
         public ModeladoTablas(DbContextOptions<ModeladoTablas> opciones) : base(opciones)
@@ -55,7 +57,7 @@ namespace ms_majiInnovator.Persistencia
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<CatalogoTelefono>(entity =>
+            modelBuilder.Entity<MarcaCelular>(entity =>
             {
                 entity.HasKey(e => e.Id);
 
@@ -63,12 +65,93 @@ namespace ms_majiInnovator.Persistencia
                       .ValueGeneratedOnAdd()
                       .UseIdentityColumn();
 
-                entity.Property(e => e.Marca).IsRequired();
-                entity.Property(e => e.Camara).IsRequired();
-                entity.Property(e => e.Ram).IsRequired();
-                entity.Property(e => e.Precio).IsRequired();
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.Descripcion)
+                      .HasMaxLength(500);
+
+                entity.Property(e => e.Activa)
+                      .HasDefaultValue(true);
+
+                entity.Property(e => e.FechaCreacion)
+                      .HasDefaultValueSql("GETDATE()");
+
+                entity.HasIndex(e => e.Nombre)
+                      .IsUnique();
             });
 
+            modelBuilder.Entity<ModeloCelular>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .ValueGeneratedOnAdd()
+                      .UseIdentityColumn();
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(150);
+
+                entity.Property(e => e.Descripcion)
+                      .HasMaxLength(1000);
+
+                entity.Property(e => e.Precio)
+                      .HasColumnType("decimal(18,2)")
+                      .IsRequired();
+
+                entity.Property(e => e.Disponible)
+                      .HasDefaultValue(true);
+
+                entity.Property(e => e.FechaCreacion)
+                      .HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(e => e.Marca)
+                      .WithMany(m => m.Modelos)
+                      .HasForeignKey(e => e.MarcaId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => new { e.Nombre, e.MarcaId })
+                      .IsUnique();
+            });
+
+            modelBuilder.Entity<CaracteristicaCelular>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .ValueGeneratedOnAdd()
+                      .UseIdentityColumn();
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.Valor)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                entity.Property(e => e.Unidad)
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.Descripcion)
+                      .HasMaxLength(500);
+
+                entity.Property(e => e.Activa)
+                      .HasDefaultValue(true);
+
+                entity.Property(e => e.FechaCreacion)
+                      .HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(e => e.Modelo)
+                      .WithMany(m => m.Caracteristicas)
+                      .HasForeignKey(e => e.ModeloId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => new { e.Nombre, e.ModeloId })
+                      .IsUnique();
+            });
 
         }
 

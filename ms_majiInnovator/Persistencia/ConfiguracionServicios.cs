@@ -6,14 +6,13 @@ namespace ms_majiInnovator.Persistencia
 {
     public static class ConfiguracionServicios
     {
-        public static void AgregarServiciosPersistencia(this IServiceCollection servicios)
+        public static void AgregarServiciosPersistencia(this IServiceCollection servicios, string connectionString)
         {
             servicios.AddDbContext<ModeladoTablas>(opciones =>
-                opciones.UseSqlServer(ConfiguracionConexion.CadenaConexion));
+                opciones.UseSqlServer(connectionString));
             
             servicios.AddScoped<RepositorioUsuario>();
-            servicios.AddScoped<RepositorioRespuestaEncuesta>();
-            servicios.AddScoped<RepositorioCatalogoTelefono>();
+            servicios.AddScoped<RepositorioRespuestaEncuesta>();            
         }
     }
 }
