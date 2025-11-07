@@ -11,6 +11,7 @@ namespace ms_majiInnovator.Persistencia
         public DbSet<ModeloCelular> ModelosCelular { get; set; }
         public DbSet<CaracteristicaCelular> CaracteristicasCelular { get; set; }
         public DbSet<ImagenCelular> ImagenesCelular { get; set; }
+        public DbSet<Pago> Pagos { get; set; }
 
 
         public ModeladoTablas(DbContextOptions<ModeladoTablas> opciones) : base(opciones)
@@ -169,6 +170,40 @@ namespace ms_majiInnovator.Persistencia
                 entity.HasOne(e => e.Modelo)
                       .WithMany(m => m.Imagenes)
                       .HasForeignKey(e => e.ModeloId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Pago>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .ValueGeneratedOnAdd()
+                      .UseIdentityColumn();
+
+                entity.Property(e => e.UsuarioId)
+                      .IsRequired();
+
+                entity.Property(e => e.Valor)
+                      .HasColumnType("decimal(18,2)")
+                      .IsRequired();
+
+                entity.Property(e => e.UltimosCuatroDigitosTarjeta)
+                      .IsRequired()
+                      .HasMaxLength(4);
+
+                entity.Property(e => e.FechaPago)
+                      .IsRequired()
+                      .HasDefaultValueSql("GETDATE()");
+
+                entity.Property(e => e.Estado)
+                      .IsRequired()
+                      .HasMaxLength(50)
+                      .HasDefaultValue("Completado");
+
+                entity.HasOne(e => e.Usuario)
+                      .WithMany(u => u.Pagos)
+                      .HasForeignKey(e => e.UsuarioId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 

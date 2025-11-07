@@ -362,7 +362,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Archivos de configuración con credenciales
-**/appsettings.Development.json
+# Archivos de configuración con credenciales y configuración sensible
+**/appsettings.json
+**/appsettings.*.json
 CREDENCIALES_DOCENTE.txt
 CREDENCIALES*.txt

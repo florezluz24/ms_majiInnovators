@@ -43,6 +43,11 @@
         public string Rol { get; set; } = "Cliente";
 
         /// <summary>
+        /// Colección de pagos realizados por el usuario
+        /// </summary>
+        public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
+
+        /// <summary>
         /// Constructor con parámetros para crear un nuevo usuario
         /// </summary>
         /// <param name="nombre">Nombre del usuario</param>
