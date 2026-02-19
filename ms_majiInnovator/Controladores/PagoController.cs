@@ -17,7 +17,11 @@ namespace ms_majiInnovator.Controladores
             _repositorioPago = repositorioPago;
             _repositorioUsuario = repositorioUsuario;
         }
-
+        /// <summary>
+        /// Pago del producto seleccionado por el usuario
+        /// </summary>
+        /// <param name="pagoDTO"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<PagoRespuestaDTO>> Crear(PagoDTO pagoDTO)
         {

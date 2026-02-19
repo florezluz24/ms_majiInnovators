@@ -1,3 +1,4 @@
+using System.Reflection;
 using ms_majiInnovator.Encuestas;
 using ms_majiInnovator.Persistencia;
 using ms_majiInnovator.Configuracion;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Obtener la cadena de conexión desde appsettings.json
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AgregarServiciosPersistencia(connectionString);
@@ -33,7 +34,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+});
 
 var app = builder.Build();
 
@@ -58,4 +64,3 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
-
